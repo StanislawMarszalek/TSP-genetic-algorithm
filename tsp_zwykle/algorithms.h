@@ -12,7 +12,6 @@
 using namespace std;
 using namespace chrono;
 
-// Function for nearest neighbor heuristic
 vector<int> tsp_nearest_neighbour(const vector<vector<double>>& graph) {
     int n = graph.size();
     vector<bool> visited(n, false);
@@ -51,7 +50,7 @@ vector<int> tsp_nearest_neighbour(const vector<vector<double>>& graph) {
     return path;
 }
 
-// Function for the Genetic Algorithm
+
 void tsp_genetic(const vector<vector<double>>& graph, int population_size = 100, double mutation_rate = 0.05, double crossover_rate = 0.95, int generations = 1000, int max_generations_without_improvement = 250, int tournamentNumb = 10, int max_time_seconds = 180) {
     int n = graph.size();
     if (n < 2) {
@@ -167,7 +166,6 @@ void tsp_genetic(const vector<vector<double>>& graph, int population_size = 100,
             return calculate_fitness(a) < calculate_fitness(b);
         });
 
-        // Elitaryzm: najlepsze 25% przechodzi do następnej populacji
         new_population.insert(new_population.end(), population.begin(), population.begin() + population_size / 4);
 
         while (new_population.size() < population_size) {

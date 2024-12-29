@@ -15,7 +15,6 @@ using namespace chrono;
 
 mutex population_mutex;
 
-// Function for nearest neighbor heuristic
 vector<int> tsp_nearest_neighbour(const vector<vector<double>>& graph) {
     int n = graph.size();
     vector<bool> visited(n, false);
@@ -54,18 +53,17 @@ vector<int> tsp_nearest_neighbour(const vector<vector<double>>& graph) {
     return path;
 }
 
-// Function to initialize diverse populations for islands
 vector<vector<int>> initiate_population(int graph_size, int population_size, const vector<int>& current_best_route, int island_id) {
     vector<vector<int>> population;
     population.push_back(current_best_route);
     random_device rd;
-    mt19937 rng(rd() + island_id); // Unikalne ziarno dla każdej wyspy
+    mt19937 rng(rd() + island_id); 
 
     for (int i = 1; i < population_size; i++) {
         vector<int> route(graph_size);
         iota(route.begin(), route.end(), 1);
-        shuffle(route.begin() + 1, route.end() - 1, rng); // Tasowanie tylko wierzchołków oprócz 1
-        route.push_back(1); // Dodanie powrotu do wierzchołka startowego
+        shuffle(route.begin() + 1, route.end() - 1, rng); 
+        route.push_back(1); 
         population.push_back(route);
     }
     return population;
@@ -73,7 +71,7 @@ vector<vector<int>> initiate_population(int graph_size, int population_size, con
 
 
 
-// Function for the Genetic Algorithm on a single island
+
 void tsp_genetic_island(const vector<vector<double>>& graph, vector<vector<int>>& island_population, int population_size, double mutation_rate, double crossover_rate, int generations, int max_generations_without_improvement, int tournamentNumb, int max_time_seconds, vector<int>& best_route, double& best_fitness) {
     int n = graph.size();
     random_device rd;
@@ -164,7 +162,7 @@ void tsp_genetic_island(const vector<vector<double>>& graph, vector<vector<int>>
             return calculate_fitness(a) < calculate_fitness(b);
         });
 
-        // Elitaryzm: najlepsze 25% przechodzi do następnej populacji
+
         new_population.insert(new_population.end(), island_population.begin(), island_population.begin() + population_size / 4);
 
         while (new_population.size() < population_size) {
@@ -213,22 +211,18 @@ void tsp_genetic_island(const vector<vector<double>>& graph, vector<vector<int>>
     cout << "Island Best Distance: " << best_fitness << endl;
 }
 
-// Function to manage multiple islands
+
 void tsp_island_model(const vector<vector<double>>& graph, int num_islands, int migration_interval, int generations, int population_size, double mutation_rate, double crossover_rate, int max_generations_without_improvement, int tournamentNumb, int max_time_seconds) {
     vector<vector<vector<int>>> islands(num_islands);
     vector<int> global_best_route;
     double global_best_fitness = DBL_MAX;
     vector<thread> threads;
 
-    // Initialize islands with separate populations
-    // Initialize islands with separate populations
     for (int i = 0; i < num_islands; i++) {
     vector<int> initial_route = tsp_nearest_neighbour(graph);
     islands[i] = initiate_population(graph.size(), population_size, initial_route, i);
     }
 
-
-    // Run genetic algorithm on each island in separate threads
     for (int i = 0; i < num_islands; i++) {
         threads.emplace_back([&, i]() {
             tsp_genetic_island(graph, islands[i], population_size, mutation_rate, crossover_rate, generations, max_generations_without_improvement, tournamentNumb, max_time_seconds, global_best_route, global_best_fitness);
@@ -239,11 +233,10 @@ void tsp_island_model(const vector<vector<double>>& graph, int num_islands, int 
         thread.join();
     }
 
-    // Perform migration between islands at intervals
     for (int migration_step = 0; migration_step < generations; migration_step += migration_interval) {
         for (int i = 0; i < num_islands; i++) {
             int target_island = (i + 1) % num_islands;
-            int num_migrants = population_size / 10; // 10% migration
+            int num_migrants = population_size / 10; 
 
             lock_guard<mutex> lock(population_mutex);
             for (int j = 0; j < num_migrants; j++) {
