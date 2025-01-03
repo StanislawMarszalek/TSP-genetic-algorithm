@@ -53,6 +53,7 @@ vector<int> tsp_nearest_neighbour(const vector<vector<double>>& graph) {
     return path;
 }
 
+
 vector<vector<int>> initiate_population(int graph_size, int population_size, const vector<int>& current_best_route, int island_id) {
     vector<vector<int>> population;
     population.push_back(current_best_route);
@@ -70,8 +71,6 @@ vector<vector<int>> initiate_population(int graph_size, int population_size, con
 }
 
 
-
-
 void tsp_genetic_island(const vector<vector<double>>& graph, vector<vector<int>>& island_population, int population_size, double mutation_rate, double crossover_rate, int generations, int max_generations_without_improvement, int tournamentNumb, int max_time_seconds, vector<int>& best_route, double& best_fitness) {
     int n = graph.size();
     random_device rd;
@@ -83,7 +82,6 @@ void tsp_genetic_island(const vector<vector<double>>& graph, vector<vector<int>>
         for (size_t i = 0; i < route.size() - 1; i++) {
             distance += graph[route[i] - 1][route[i + 1] - 1];
         }
-        distance += graph[route.back() - 1][route.front() - 1];
         return distance;
     };
 
@@ -97,6 +95,7 @@ void tsp_genetic_island(const vector<vector<double>>& graph, vector<vector<int>>
             if (i > j) swap(i, j);
             reverse(route.begin() + i, route.begin() + j + 1);
         }
+        route.back() = route.front(); 
     };
 
     auto tournament_selection = [&](const vector<vector<int>>& population) {
@@ -114,7 +113,7 @@ void tsp_genetic_island(const vector<vector<double>>& graph, vector<vector<int>>
     };
 
     auto order_crossover = [&](const vector<int>& parent1, const vector<int>& parent2) {
-        vector<int> child1(n, -1);
+        vector<int> child1(n + 1, -1);
         child1[0] = 1;
 
         if (random_rate(rng) <= crossover_rate) {
@@ -142,6 +141,7 @@ void tsp_genetic_island(const vector<vector<double>>& graph, vector<vector<int>>
             child1 = parent1;
         }
 
+        child1.back() = child1.front(); 
         return child1;
     };
 
@@ -161,7 +161,6 @@ void tsp_genetic_island(const vector<vector<double>>& graph, vector<vector<int>>
         sort(island_population.begin(), island_population.end(), [&](const vector<int>& a, const vector<int>& b) {
             return calculate_fitness(a) < calculate_fitness(b);
         });
-
 
         new_population.insert(new_population.end(), island_population.begin(), island_population.begin() + population_size / 4);
 
@@ -205,6 +204,7 @@ void tsp_genetic_island(const vector<vector<double>>& graph, vector<vector<int>>
             generations_without_improvement = 0;
             mutation_rate = old_mutation_rate;
             crossover_rate = 1.0;
+            island_population = initiate_population(n, population_size, best_route, rd());
         }
     }
 
@@ -233,6 +233,7 @@ void tsp_island_model(const vector<vector<double>>& graph, int num_islands, int 
         thread.join();
     }
 
+    
     for (int migration_step = 0; migration_step < generations; migration_step += migration_interval) {
         for (int i = 0; i < num_islands; i++) {
             int target_island = (i + 1) % num_islands;

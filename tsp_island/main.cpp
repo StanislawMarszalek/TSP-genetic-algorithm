@@ -17,7 +17,7 @@ int main(int argc, char* argv[]) {
     bool greedy = false, island = false;
     string input_file;
 
-    
+    // Parsowanie argumentów
     for (int i = 1; i < argc; i++) {
         string arg = argv[i];
         if (arg == "--greedy") greedy = true;
@@ -46,15 +46,14 @@ int main(int argc, char* argv[]) {
     if (greedy) {
         tsp_nearest_neighbour(graph);
     } else if (island) {
-        int num_islands = 5; 
-        int migration_interval = 100; 
+
 
         if (n < 50) {
             tsp_island_model(graph, 7, 200, 3500, 250, 0.1, 0.95, 450, 4, 180);
         } else if (n < 200) {
-            tsp_island_model(graph, 10, 250, 5500, 700, 0.15, 0.95, 650, 5, 180);
+            tsp_island_model(graph, 10, 250, 6000, 700, 0.15, 0.95, 650, 5, 180);
         } else if (n < 500) {
-            tsp_island_model(graph, 11, 270, 7500, 1000, 0.175, 0.95, 800, 7, 180);
+            tsp_island_model(graph, 11, 275, 7500, 1000, 0.175, 0.95, 800, 7, 180);
         } else {
             tsp_island_model(graph, 13, 325, 10000, 1750, 0.19, 0.95, 950, 9, 180);
         }
