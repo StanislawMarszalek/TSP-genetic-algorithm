@@ -49,6 +49,7 @@ vector<int> tsp_nearest_neighbour(const vector<vector<double>>& graph) {
     cout << "Nearest Neighbour - Path: ";
     for (int city : path) cout << city << " ";
     cout << "\nNearest Neighbour - Distance: " << total_distance << endl;
+    cout<<"wykonane; ";
 
     return path;
 }
@@ -205,6 +206,7 @@ void tsp_genetic_island(const vector<vector<double>>& graph, vector<vector<int>>
             mutation_rate = old_mutation_rate;
             crossover_rate = 1.0;
             island_population = initiate_population(n, population_size, best_route, rd());
+            
         }
     }
 
@@ -233,18 +235,34 @@ void tsp_island_model(const vector<vector<double>>& graph, int num_islands, int 
         thread.join();
     }
 
-    
     for (int migration_step = 0; migration_step < generations; migration_step += migration_interval) {
-        for (int i = 0; i < num_islands; i++) {
-            int target_island = (i + 1) % num_islands;
-            int num_migrants = population_size / 10; 
 
-            lock_guard<mutex> lock(population_mutex);
+    vector<vector<vector<int>>> migration_buffer(num_islands, vector<vector<int>>(population_size, vector<int>(graph.size() + 1)));
+
+    {
+        lock_guard<mutex> lock(population_mutex);
+
+
+        for (int i = 0; i < num_islands; i++) {
+            int num_migrants = (population_size*3) / 20;
+
             for (int j = 0; j < num_migrants; j++) {
-                islands[target_island][j] = islands[i][j];
+
+                migration_buffer[(i + 1) % num_islands][j] = islands[i][j];
+            }
+        }
+
+
+        for (int i = 0; i < num_islands; i++) {
+            int num_migrants = (population_size*3) / 20;
+
+            for (int j = 0; j < num_migrants; j++) {
+                islands[i][j] = migration_buffer[i][j];
             }
         }
     }
+}
+
 
     cout << "Final Global Best Distance: " << global_best_fitness << endl;
     cout << "Final Global Best Path: ";
@@ -253,3 +271,4 @@ void tsp_island_model(const vector<vector<double>>& graph, int num_islands, int 
     }
     cout << endl;
 }
+
