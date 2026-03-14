@@ -84,7 +84,7 @@ void tsp_genetic(const vector<vector<double>>& graph, int population_size = 100,
     };
 
     auto shuffle_mutation = [&](vector<int>& route) {
-        vector<int> oldRoute = route;
+
         if (random_rate(rng) <= mutation_rate) {
             int i, j;
             do {
