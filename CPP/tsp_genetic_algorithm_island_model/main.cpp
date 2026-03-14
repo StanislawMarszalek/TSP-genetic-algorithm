@@ -34,13 +34,13 @@ int main(int argc, char* argv[]) {
     if (generate) {
         graph = full_graph();
         if (graph.empty()) {
-            cerr << "Błąd podczas generowania grafu." << endl;
+            cerr << "Error during graph generation occured" << endl;
             return 1;
         }
     } else {
         ifstream file(input_file);
         if (!file.is_open()) {
-            cerr << "Nie można otworzyć pliku: " << input_file << endl;
+            cerr << "Cannot open the file: " << input_file << endl;
             return 1;
         }
 
@@ -72,7 +72,7 @@ int main(int argc, char* argv[]) {
             tsp_island_model(graph, 13, 325, 10000, 1750, 0.19, 0.95, 950, 9, 180);
         }
     } else {
-        cerr << "Nie rozpoznano opcji. Użyj --greedy, --island lub --generate." << endl;
+        cerr << "Unknoknw option. Use --greedy, --island or --generate." << endl;
         return 1;
     }
 

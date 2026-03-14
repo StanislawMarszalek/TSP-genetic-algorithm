@@ -26,7 +26,7 @@ int main(int argc, char* argv[]) {
 
     ifstream file(input_file);
     if (!file.is_open()) {
-        cerr << "Nie można otworzyć pliku: " << input_file << endl;
+        cerr << "Cannot open the file: " << input_file << endl;
         return 1;
     }
 
@@ -53,7 +53,7 @@ int main(int argc, char* argv[]) {
             tsp_genetic(graph, 1750, 0.19, 0.95, 10000, 950, 9, 180);
         }
     } else {
-        cerr << "Nie rozpoznano opcji. Użyj --greedy lub --genetic." << endl;
+        cerr << "Unknown option. Use --greedy or --genetic." << endl;
         return 1;
     }
 

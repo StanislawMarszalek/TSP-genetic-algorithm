@@ -49,7 +49,7 @@ vector<int> tsp_nearest_neighbour(const vector<vector<double>>& graph) {
     cout << "Nearest Neighbour - Path: ";
     for (int city : path) cout << city << " ";
     cout << "\nNearest Neighbour - Distance: " << total_distance << endl;
-    cout<<"wykonane; ";
+    
 
     return path;
 }
