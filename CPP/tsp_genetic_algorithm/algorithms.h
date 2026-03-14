@@ -51,9 +51,9 @@ vector<int> tsp_nearest_neighbour(const vector<vector<double>>& graph) {
 }
 
 
-void tsp_genetic(const vector<vector<double>>& graph, int population_size = 100, double mutation_rate = 0.05, double crossover_rate = 0.95, int generations = 1000, int max_generations_without_improvement = 250, int tournamentNumb = 10, int max_time_seconds = 180) {
-    int n = graph.size();
-    if (n < 2) {
+vector<int>  tsp_genetic(const vector<vector<double>>& graph, int population_size = 100, double mutation_rate = 0.05, double crossover_rate = 0.95, int generations = 1000, int max_generations_without_improvement = 250, int tournamentNumb = 10, int max_time_seconds = 180) {
+    int graph_size = graph.size();
+    if (graph_size < 2) {
         cout << "Graph is too small for TSP." << endl;
         return;
     }
@@ -88,8 +88,8 @@ void tsp_genetic(const vector<vector<double>>& graph, int population_size = 100,
         if (random_rate(rng) <= mutation_rate) {
             int i, j;
             do {
-                i = 1 + rng() % (n - 2);
-                j = 1 + rng() % (n - 2);
+                i = 1 + rng() % (graph_size - 2);
+                j = 1 + rng() % (graph_size - 2);
             } while (i == j);
             if (i > j) swap(i, j);
             reverse(route.begin() + i, route.begin() + j + 1);
@@ -111,12 +111,12 @@ void tsp_genetic(const vector<vector<double>>& graph, int population_size = 100,
     };
 
     auto order_crossover = [&](const vector<int>& parent1, const vector<int>& parent2) {
-        vector<int> child1(n, -1);
+        vector<int> child1(graph_size, -1);
         child1[0] = 1;
 
         if (random_rate(rng) <= crossover_rate) {
-            int start = 1 + rng() % (n - 2);
-            int end = 1 + rng() % (n - 2);
+            int start = 1 + rng() % (graph_size - 2);
+            int end = 1 + rng() % (graph_size - 2);
             if (start > end) swap(start, end);
 
             copy(parent1.begin() + start, parent1.begin() + end + 1, child1.begin() + start);
@@ -143,7 +143,7 @@ void tsp_genetic(const vector<vector<double>>& graph, int population_size = 100,
     };
 
     vector<int> current_best_route = tsp_nearest_neighbour(graph);
-    vector<vector<int>> population = initiate_population(n, population_size, current_best_route);
+    vector<vector<int>> population = initiate_population(graph_size, population_size, current_best_route);
     vector<int> best_route = current_best_route;
     double best_fitness = calculate_fitness(best_route);
     vector<int> tmp_best_route = best_route;
@@ -208,7 +208,7 @@ void tsp_genetic(const vector<vector<double>>& graph, int population_size = 100,
                 tmp_best_route = best_route;
                 tmp_best_fitness = best_fitness;
             }
-            population = initiate_population(n, population_size,best_route);
+            population = initiate_population(graph_size, population_size,best_route);
 
             generations_without_improvement = 0;
             mutation_rate = old_mutation_rate;
@@ -222,4 +222,5 @@ void tsp_genetic(const vector<vector<double>>& graph, int population_size = 100,
         cout << city << " ";
     }
     cout << "\nGenetic Algorithm - Best Distance: " << tmp_best_fitness << endl;
+    return tmp_best_route;
 }

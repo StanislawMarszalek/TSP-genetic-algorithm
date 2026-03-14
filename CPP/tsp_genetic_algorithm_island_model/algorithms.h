@@ -214,7 +214,7 @@ void tsp_genetic_island(const vector<vector<double>>& graph, vector<vector<int>>
 }
 
 
-void tsp_island_model(const vector<vector<double>>& graph, int num_islands, int migration_interval, int generations, int population_size, double mutation_rate, double crossover_rate, int max_generations_without_improvement, int tournamentNumb, int max_time_seconds) {
+vector<int>  tsp_island_model(const vector<vector<double>>& graph, int num_islands, int migration_interval, int generations, int population_size, double mutation_rate, double crossover_rate, int max_generations_without_improvement, int tournamentNumb, int max_time_seconds) {
     vector<vector<vector<int>>> islands(num_islands);
     vector<int> global_best_route;
     double global_best_fitness = DBL_MAX;
@@ -270,5 +270,6 @@ void tsp_island_model(const vector<vector<double>>& graph, int num_islands, int 
         cout << city << " ";
     }
     cout << endl;
+    return global_best_route;
 }
 
