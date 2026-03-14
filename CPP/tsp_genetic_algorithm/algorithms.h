@@ -55,7 +55,7 @@ vector<int>  tsp_genetic(const vector<vector<double>>& graph, int population_siz
     int graph_size = graph.size();
     if (graph_size < 2) {
         cout << "Graph is too small for TSP." << endl;
-        return;
+        return vector<int>{-1};
     }
 
     random_device rd;
