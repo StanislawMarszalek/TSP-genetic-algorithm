@@ -44,10 +44,10 @@ int main(int argc, char* argv[]) {
             return 1;
         }
 
-        int n;
-        file >> n;
-        vector<vector<int>> cities(n, vector<int>(3));
-        for (int i = 0; i < n; i++) {
+        int number_of_cities;
+        file >> number_of_cities;
+        vector<vector<int>> cities(number_of_cities, vector<int>(3));
+        for (int i = 0; i < number_of_cities; i++) {
             file >> cities[i][0] >> cities[i][1] >> cities[i][2];
         }
         file.close();
@@ -59,14 +59,14 @@ int main(int argc, char* argv[]) {
     if (greedy) {
         tsp_nearest_neighbour(graph); 
     } else if (island) {
-        int n = graph.size(); 
+        int number_of_cities = graph.size(); 
 
 
-        if (n < 50) {
+        if (number_of_cities < 50) {
             tsp_island_model(graph, 9, 225, 5500, 500, 0.1, 0.95, 600, 4, 180);
-        } else if (n < 200) {
+        } else if (number_of_cities < 200) {
             tsp_island_model(graph, 10, 250, 6000, 700, 0.15, 0.95, 650, 5, 180);
-        } else if (n < 500) {
+        } else if (number_of_cities < 500) {
             tsp_island_model(graph, 11, 275, 7500, 1000, 0.175, 0.95, 800, 7, 180);
         } else {
             tsp_island_model(graph, 13, 325, 10000, 1750, 0.19, 0.95, 950, 9, 180);

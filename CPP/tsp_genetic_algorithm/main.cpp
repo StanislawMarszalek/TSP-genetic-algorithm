@@ -12,48 +12,58 @@
 using namespace std;
 
 int main(int argc, char* argv[]) {
-    bool greedy = false, genetic = false;
+    bool greedy = false, genetic = false,generate = false;
     string input_file;
 
     for (int i = 1; i < argc; i++) {
         string arg = argv[i];
         if (arg == "--greedy") greedy = true;
         else if (arg == "--genetic") genetic = true;
+        else if (arg == "--generate") generate = true; 
         else input_file = arg; 
     }
 
     vector<vector<double>> graph;
-
-    ifstream file(input_file);
-    if (!file.is_open()) {
-        cerr << "Cannot open the file: " << input_file << endl;
-        return 1;
+    if (generate) {
+        graph = full_graph();
+        if (graph.empty()) {
+            cerr << "Error during graph generation occured" << endl;
+            return 1;
+        }
     }
+    else {
+        ifstream file(input_file);
+        if (!file.is_open()) {
+            cerr << "Cannot open the file: " << input_file << endl;
+            return 1;
+        }
 
-    int n;
-    file >> n; 
-    vector<vector<int>> cities(n, vector<int>(3));
-    for (int i = 0; i < n; i++) {
-        file >> cities[i][0] >> cities[i][1] >> cities[i][2];
+        int number_of_cities;
+        file >> number_of_cities; 
+        vector<vector<int>> cities(number_of_cities, vector<int>(3));
+        for (int i = 0; i < number_of_cities; i++) {
+            file >> cities[i][0] >> cities[i][1] >> cities[i][2];
+        }
+        file.close();
+
+        graph = create_distance_graph(cities);
     }
-    file.close();
-
-    graph = create_distance_graph(cities);
 
     if (greedy) {
         tsp_nearest_neighbour(graph);
     } else if (genetic) {
-        if (n < 50) {
+        int number_of_cities = graph.size(); 
+        if (number_of_cities < 50) {
             tsp_genetic(graph, 250, 0.1, 0.95, 3500, 450, 4, 180);
-        } else if (n < 200) {
+        } else if (number_of_cities < 200) {
             tsp_genetic(graph, 700, 0.15, 0.95, 5500, 650, 5, 180);
-        } else if (n < 500) {
+        } else if (number_of_cities < 500) {
             tsp_genetic(graph, 1000, 0.175, 0.95, 7500, 800, 7, 180);
         } else {
             tsp_genetic(graph, 1750, 0.19, 0.95, 10000, 950, 9, 180);
         }
     } else {
-        cerr << "Unknown option. Use --greedy or --genetic." << endl;
+        cerr << "Unknown option. Use --greedy,--genetic or --generate." << endl;
         return 1;
     }
 
