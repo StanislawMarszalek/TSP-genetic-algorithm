@@ -1,9 +1,21 @@
 import random
 import sys
 
-def generate_file(filename:str,number_of_cities:int,coord_min_value:int,coord_max_value:int)->None:
+def generate_file(pathfile:str,number_of_cities:int,coord_min_value:int,coord_max_value:int)->None:
+    """
+    Generate file that contains cities with their coordinates
+    
+    :param filename: Path to the file
+    :type filename: str
+    :param number_of_cities: Number of cities to create (each city is stored in a new line)
+    :type number_of_cities: int
+    :param coord_min_value: Minimal value for coordinates
+    :type coord_min_value: int
+    :param coord_max_value: Maximal value for coordinates
+    :type coord_max_value: int
+    """
     cities:set = set()
-    with open(filename, 'w',encoding="utf-8") as file:
+    with open(pathfile, 'w',encoding="utf-8") as file:
         file.write(f"{number_of_cities}\n")
         for i in range(1, number_of_cities + 1):
             while True:
